@@ -1,0 +1,24 @@
+Heroku.
+We could run npm run build in the client's package.json which will turn our react application
+project into a static assets and can let us to upload but since our's is a full stack, we need to tak care of the node.
+So we use Heroku.
+
+server.js
+if (process.env.NODE_ENV === "production") {
+    //Set static folder
+    app.use(express.static('client/build'))
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    })
+}
+Meaning if it's in the production, then we're making the client build file as static,
+and then will send that if any api get's hit.
+res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
+This is to send the file as a response if any api get's hit and we use the path module
+to direct the file path.
+path.resolve(__dirname, "client", "build", "index.html")
+The above's meaning is selecting the current path and then directing to the client containing build which inturn has the 
+index.html file.
+===
+Then on the server's package.json, we add the below next to the dev script.
+"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"

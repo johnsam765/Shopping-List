@@ -1,0 +1,41 @@
+Flow 1:
+Create server.js
+.
+const express = require("express")
+const mongoose = require("mongoose")
+const bodyP = require("body-parser")
+Importing all the modules in the server.js
+..
+1.Initialize express into a variable so that we can use the variable throught the dev.
+const app=express()
+Correction:
+2.From Express version 4.16+, we don't need a seperate body parser since express itself has a body parser and 
+the use of this is to let the server know to deal with reading the “body” of an incoming JSON object .
+so instead of app.use(bodyParser.json()), we use
+app.use(express.json());
+3.Mongoose comes nto the play:
+Open the mongoose and create  a DB , user and then copy the URI to a seperate file called keys.js
+in the Config folder and export it.
+make use of that key in thE mONGOOSE Constructor.
+const DB = require("./Config/keys").mongoURI;
+const port=process.env.PORT||5000;
+the above is to utilizr the port for the server.the former is for the heroko's prod server and 
+the latter is for the dev's server.
+mongoose.connect(DB,{ useNewUrlParser: true, useUnifiedTopology: true })
+//since this is a promise, we have the call back option
+.then(()=>{consolo.log("Mongo DB connected")})
+.catch(err=>{console.log(err)})//For any errors
+4.In order to start the server and lsten to the port,
+we make use of the express app
+const port=process.env.PORT||5000;
+app.listen(port,()=>
+{
+    console.log(`Server started on port ${port}`)
+})
+The above listen gives an optional call back function for us to use
+...
+Creating Models for the mongoose
+======================================FrontEnd=======================
+.Create a new folder and named it as client which will have the entire React modules.
+1.npm i -g create-react-app - To install react globally
+2.Then traget the folder we want to create the react app,,then issue create-react-app .

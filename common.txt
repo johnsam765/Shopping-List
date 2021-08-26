@@ -1,0 +1,13 @@
+We want to run both the client and the server at the same time, so we will be using concurrently
+which will allow us to run both at the same time.
+(i) Go to the main folder location if incase the current location is somewgere inside
+cd..
+(ii)Add the below code in the scripts->package.json of the server.js
+"client": "npm start --prefix client",
+"dev":"concurrently \"npm run server\" \"npm run client\" "
+--"client": "npm start --prefix client", or "client":"npm start && cd client"
+This line says to run the npm after getting inside the folder client
+--"dev":"concurrently \"npm run server\" \"npm run client\" "
+This is to run both the server concurrently
+And finally npm run dev will both the serverso npm run server for the server,
+npm run client is for the clent and npm run dev is to run both the server at the same time.

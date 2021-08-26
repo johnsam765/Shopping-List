@@ -1,0 +1,17 @@
+This part is after the formation of redux---
+1.We remove the static data in the state from the reducer (ie. the initial state of the reducer)
+by leaving the array empty and we're adding a boolean variable "loading" because for the fact,
+we're gonna fetch the data from th API and this will be initially false and while fetching the data,
+we change them to true and once the data fetched and returned, we will again make them false.
+2.We need to create this as a type as we're having in our reducer.
+as 
+export const ITEMS_LOADING="ITEMS_LOADING"
+====
+The way we're gonna fetch the data s via axios, so we need to install it.
+(Note:This need to be done in client side)
+PS E:\MERN> cd client
+PS E:\MERN\client> npm i axios
+And once imported, use it ie import it in the Action Creator.
+import axios from "axios" in the Action Creator.
+-----
+

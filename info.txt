@@ -1,0 +1,10 @@
+---------------------------------------Pre Requisite--------------------------------------------------
+M-Mongo DB(mLab application)
+E - Express JS for backend(for building API'S)
+React- Front End Framework/Libraries
+Node - Node JS runtime(JS as server side language)
+
+Also be using React Strap(module to import Bootstrap components as React Components 
+and React Transition group module to add some fade effect)
+Heroku - To host
+--------------------------------------------------------

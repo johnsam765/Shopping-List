@@ -1,0 +1,104 @@
+While building a fullstack app, we need to add a proxy value in the package.json in the react app.
+When we make request from react, we're gonna be using axios and we will be using axios.get.
+We don't want our have our domain like
+axios.get("http://localhost:5000/api/items)...so we just want to have it as 
+axios.get('api/items')
+Under scripts in package.json, we're gonna define a proxy as
+"proxy":"http://localhost:5000"
+----
+Once after setting up with the server part of both the client and the backend, we need to install some dependencies in the 
+front end(react)
+So, we need to get into the client folder to install them
+(React Strap, React Transition Group)
+npm install bootstrap reactstrap uuid react-transtion-group
+(i)bootstrap is to make use of bootstrap classes
+(ii)reactstrap is to make use of the bootstrap classes as React Components
+(iii) uuid - is to generate a random id
+(iv)react-transition-group - is for a fade in fade out transition effect 
+-------------------
+Steps:
+In the App.js, import the bootstrap
+import "bootstrap/dist/css/bootstrap.min.css";
+--------------------------
+AppNavbar.js Component
+--------------------------
+Refer this for the reactstrap doc https://reactstrap.github.io/components/navbar/
+===================================================================================
+Woring with Redux----------
+----
+(i)Install Redux,React-Redux,
+Note that Redux does nothing to do with the react, it's a seperate functionality and react-redux helps
+us to work with the redux in our project and we also install thunk which is a middleware used to dispatch the actions
+to our reducers.
+Note, we need to install this in our client.
+npm i redux react-redux redux-thunk
+(ii)Create a file called store.js which will be our store that'll contains the centralized state of all our react 
+components.
+https://redux.js.org/api/store
+This store is the entry point to our redux store 
+state.
+--Importing
+import { createStore, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
+import rootReducer from "./reducers/index"
+
+createStore is to create a store
+applyMiddleware is used to make use of thunk facility in dispatching our actions and 
+compose is for our redux dev tools.
+rootReducer is that we import the index.js that has all the reducers combined as one and there in that file
+--Creating the store
+The storecreation takes 3 parameters
+1.intialState,2.the root reducers 3.compose(mostly will hae the applyMiddleware(...middleware))
+so the applyMiddleware(usually takes an array of functionalities),compose are the functions that make use of the thunk
+const initialState = {}
+const middleware = [thunk]
+
+const store = createStore(rootReducer, initialState, compose(applyMiddleware(...middleware),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+))
+
+and then finally we export it and we don't touch that
+(iii)To integrate the store to our react applcation, we need to bring in the Provider which is in the react-redux
+used to bind the reduxand react to bind them together.
+We wrap all the our components with the Provider tag and passing the store we created earler as a prop:
+<Provider store={store}>
+    <div className="App">
+      <AppNavbar />
+      <ShoppingList />
+    </div>
+    </Provider>
+(iv)Create a reducers folder and inturn create an index.js file which will have all the reducers of our project in it
+and we will export it from there as a combined one
+--index.js
+We will combineReducers from redux to combine all the reducers as one and we import all the reducers here to combine them as one,
+so the reducers will have all the reducers as well as the index file which will combine them and we finally 
+export it by passing a key value pair as an object inside the combineReducers module.
+import { combineReducers } from "redux";
+import itemReducer from "./ItemReducer"--
+
+export default combineReducers({
+    item: itemReducer
+})
+--ItemReducer.js,types.js
+Reducer is the place where all our actual state gonna go..so we check our actions where we will check our actions file.
+--Since we're gonna have our state here, we imported the uuid which we had in or component and an initial
+state as the reducer function takes 2 parametrs (i)state(ii)action
+(I)The state will be our initial state here
+(ii)We will create a file called types from which our action types will be fetched
+So we creare a folder called actions and it will have the types as well as the actions of our project
+The below types.js has all our action types in the types.js file and we will mport that in our reducer.
+import uuid from "uuid";
+const initialState = {
+    items: [{ id: uuid(), name: 'Eggs' }, { id: uuid(), name: 'Milk' }, { id: uuid(), name: 'Steak' },
+        { id: uuid(), name: 'Water' }
+    ]
+}
+
+--types.js
+export const GET_ITEMS = "GET_ITEMS";
+export const ADD_ITEMS = "ADD_ITEMS";
+export const DEL_ITEMS = "DEL_ITEMS";
+
+Con't:
+In our reducer we're gonna have a switch statement
+

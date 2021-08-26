@@ -1,0 +1,11 @@
+1.npm init:
+To initialize the npm package
+2.Install Dependencies:
+(i)npm install express body-parser mongoose concurrently- The express backend framework,body-parser
+to retrieve the data that the users send via a body,mongoose for our db and concurrently to
+run more than one npm script at a time so that we can run the server and the client at the same time.
+(ii)npm install -D nodemon = Automatically reloads the server when we modify and save somrthing in our code and
+we're saving it only for our Dev dependency.
+(iii)We add the below codes in the scripts->package.json
+"start": "node server.js",
+"server": "nodemon server.js"
