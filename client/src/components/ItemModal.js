@@ -9,16 +9,17 @@ import {
   Label,
   Input,
 } from "reactstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { addItem } from "../actions/ItemActions";
 import axios from "axios";
 
-export default function ItemModal() {
+export default function ItemModal({ configToken }) {
   const dispatch = useDispatch();
+  const data = useSelector((state) => state);
   const [state, setState] = useState([{ modal: false, name: "" }]);
   const toggle = () => {
-    setState({ ...state, modal: !state["modal"] });
+    setState({ ...state, modal: !state["modal"], name: "" });
   };
   const onSubmit = (e) => {
     e.preventDefault();
@@ -29,16 +30,20 @@ export default function ItemModal() {
   function onChanged(e) {
     setState({ ...state, name: e.target.value });
   }
-  const post=(item)=>
-  {
-    axios.post("/api/items",item)
-    .then(res=>dispatch(addItem(res.data)))
-  }
+  const post = (item) => {
+    axios
+      .post("/api/items", item, configToken(data))
+      .then((res) => dispatch(addItem(res.data)));
+  };
   return (
     <div>
-      <Button color="dark" style={{ marginBottom: "2em" }} onClick={toggle}>
-        Add Item
-      </Button>
+      {data.auth.isAuthenticated ? (
+        <Button color="dark" style={{ marginBottom: "2em" }} onClick={toggle}>
+          Add Item
+        </Button>
+      ) : (
+        <h4 className="mb-4 ml-4">Please Log-In to Manage Items</h4>
+      )}
       <Modal isOpen={state.modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>Add to the Shopping List</ModalHeader>
         <ModalBody>
@@ -52,7 +57,11 @@ export default function ItemModal() {
                 placeholder="Add Shopping Item"
                 onChange={onChanged}
               ></Input>
-              <Button color="dark" style={{ marginTop: "2rem" }} block>
+              <Button
+                color="dark"
+                style={{ marginTop: "2rem", width: "100%" }}
+                block
+              >
                 Add Item
               </Button>
             </FormGroup>

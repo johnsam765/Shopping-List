@@ -3,27 +3,35 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getItem, delItem, setItemsLoading } from "../actions/ItemActions";
+import { returnErrors } from "../actions/errorAction";
 import axios from "axios";
-const ShoppingList = () => {
+const ShoppingList = ({ configToken }) => {
   const dispatch = useDispatch();
+  const data = useSelector((state) => state);
   const items = useSelector((state) => state.item.items);
-  const delItems = (id) => {
-    delDB(id);
-  };
-  const delDB=(id)=>
-  {
-    axios.delete(`/api/items/${id}`)
-    .then(res=>dispatch(delItem(id)))
+  function delDB(id) {
+    axios
+      .delete(`/api/items/${id}`, configToken(data))
+      .then((res) => dispatch(delItem(id)))
+      .catch((err) => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+      });
   }
   const fetch = () => {
-    axios.get("/api/items").then((res) => {
-      dispatch(setItemsLoading());
-      dispatch(getItem(res));
-    });
-  }
-  useEffect(()=>{fetch()}, []);
-  
-  
+    axios
+      .get("/api/items")
+      .then((res) => {
+        dispatch(setItemsLoading());
+        dispatch(getItem(res));
+      })
+      .catch((err) => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+      });
+  };
+  useEffect(() => {
+    fetch();
+  }, []);
+
   return (
     <Container>
       <ListGroup>
@@ -31,16 +39,18 @@ const ShoppingList = () => {
           {items.map(({ _id, name }) => (
             <CSSTransition key={_id} timeout={500} classNames="fade">
               <ListGroupItem>
-                <Button
-                  className="remove-btn"
-                  color="danger"
-                  size="sm"
-                  onClick={() => {
-                    delItems(_id);
-                  }}
-                >
-                  &times;
-                </Button>
+                {data.auth.isAuthenticated ? (
+                  <Button
+                    className="remove-btn"
+                    color="danger"
+                    size="sm"
+                    onClick={() => {
+                      delDB(_id);
+                    }}
+                  >
+                    &times;
+                  </Button>
+                ) : null}
                 {name}
               </ListGroupItem>
             </CSSTransition>

@@ -1,1 +1,0 @@
-module.exports = { mongoURI: "mongodb+srv://johnsam765:speddo007@cluster0.azxmz.mongodb.net/MERN?retryWrites=true&w=majority" }

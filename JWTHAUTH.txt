@@ -1,0 +1,81 @@
+1.We have created a model for the User
+And we have an api defined and called in the server.js inturn re-directing it to the 
+users route to handle the api request.
+2.install bcrypt.js to hash the passwords and register the user.
+npm i bcryptjs 
+3.Salting and Hashing part
+https://heynode.com/blog/2020-04/salt-and-hash-passwords-bcrypt/
+bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(newUser.password, salt, (err, hash) => {
+                    if (err) {
+                        throw err
+                    }
+                    newUser.password = hash
+                    newUser.save()
+                        .then(user => {
+                            res.json({
+                                user: {
+                                    name: user.name,
+                                    id: user._id,
+                                    email: user.email
+                                }
+                            })
+                        })
+                }
+After this, we now have an ability to register the user.
+4.Now we need to implement tokens so that when we register, we get a token, so that we can 
+immideatly login from our front-end.
+https://jwt.io/ 
+//We install the package.
+npm install jsonwebtoken
+5.Note:
+You need to switch your Mongo URI to an environmental varible of your server.
+So we install a config package.
+npm i config the config folder, we replace it with a json called default.json.
+(i)Instaed of the key in our config,we're gona have a json with the below values.
+under the file default.json in our config folder.
+{
+    "mongoURI": "mongodb+srv://johnsam765:speddo007@cluster0.azxmz.mongodb.net/MERN?retryWrites=true&w=majority",
+    "jwtSecret": "sl_myjwtSecret"
+
+}
+So that under server.js we can
+const config=require("config")
+const DB=config.get("mongoURI")
+6.We import the jsonwebtoken in the user's model. and we make use of the jwtSecret key for the 
+front end.
+Right above the res.json in the post request part of the user.js model,
+we create a token.
+========================
+BackEnd Done
+=======================
+Front End-----
+In client, we're gonna have 2 new reducers, one is the auth reducers and the other is the error reducer.
+We add the beloe action types in our types file.
+export const USER_LOADING = "USER_LOADING"
+export const USER_LOADED = "USER_LOADED"
+export const AUTH_ERROR = "AUTH_ERROR"
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS"
+export const LOGIN_FAIL = "LOGIN_FAIL"
+export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS"
+export const REGISTER_SUCCESS = "REGISTER_SUCCESS"
+export const REGISTER_FAIL = "REGISTER_FAIL"
+export const CLEAR_ERRORS = "CLEAR_ERRORS"
+export const GET_ERRORS = "GET_ERRORS"
+2.We create 2 files for auth and error reducers and we import them in the inde.jsto send this to the store
+import {
+    combineReducers
+} from "redux";
+import itemReducer from "./ItemReducer"
+import authReducer from "./AuthReducer"
+import errorReducer from "./ErrorReducer"
+
+export default combineReducers({
+    item: itemReducer,
+    auth: authReducer,
+    error: errorReducer
+})
+3.Error Reducer.
+
+
+
